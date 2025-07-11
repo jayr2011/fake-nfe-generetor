@@ -1,0 +1,64 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diretórios de build/output
+node_modules
+dist
+dist-ssr
+build/
+out/
+.next/
+.cache/
+.vite/
+coverage/
+storybook-static/
+
+# Testes
+cypress/videos/
+cypress/screenshots/
+test-output/
+*.lcov
+
+# Ambiente
+.env
+.env.*
+!.env.example
+*.local
+
+/.github
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.bak
+*.tmp
+*.orig
+
+# MacOS
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# teste coverage
+/html
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
