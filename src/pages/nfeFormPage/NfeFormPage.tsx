@@ -5,6 +5,8 @@ import nfseLogo from "@/assets/img/nfse.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea"
 import { useNfeFormController as useNfeFormControllerEn } from "./nfeForm.controller";
+import SelectComponent from "@/components/selectComponent/SelectComponent";
+import { BrushCleaning, FileCheck2 } from "lucide-react";
 
 
 function NfeFormPage() {
@@ -91,7 +93,19 @@ function NfeFormPage() {
             <InputComponent type="text" placeholder="Inscrição Municipal" name="issuer.municipalRegistration" value={values.issuer.municipalRegistration} onChange={handleChange} />
           </div>
           <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Regime Tributário" name="issuer.taxRegime" value={values.issuer.taxRegime} onChange={handleChange} />
+            <SelectComponent
+              width="w-full"
+              items={["MEI", "Simples Nacional"]}
+              placeholder="Regime Tributário"
+              value={values.issuer.taxRegime}
+              onValueChange={value => handleChange({
+                target: {
+                  name: "issuer.taxRegime",
+                  value,
+                }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              } as any)}
+            />
           </div>
           </div>
           <div className="nfe-form__input-group-client mt-4">
@@ -148,10 +162,10 @@ function NfeFormPage() {
             </div>
           </div>
           <div className="nfe-form__button flex justify-center mt-5">
-            <ButtonComponent type="submit" styleClass="px-16" label="Gerar DANFE" />
+            <ButtonComponent icon={FileCheck2} type="submit" styleClass="w-56" label="Gerar DANFE" />
           </div>
           <div className="nfe-form__reset-button flex justify-center mt-2">
-            <ButtonComponent type="button" onClick={handleResetClick} styleClass="px-16" label="Limpar formuário" />
+            <ButtonComponent icon={BrushCleaning} type="button" onClick={handleResetClick} styleClass="w-56" label="Limpar formuário" />
           </div>
         </form>
       </div>

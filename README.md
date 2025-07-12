@@ -43,39 +43,39 @@ Created by **Jair Costa**
 
 ### Prerequisites
 
-- Node.js (v18 ou superior, recomendado v22)
-- npm ou yarn
+- Node.js (v18 or higher, recommended v22)
+- npm or yarn
 
 ### Installation
 
-1. Clone o repositório:
+1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/fake-nfe-generator.git
+git clone https://github.com/jayr2011/fake-nfe-generetor.git
 cd fake-nfe-generator
 ```
 
-2. Instale as dependências:
+2. Install dependencies:
 ```bash
 npm install
-# ou
+# or
 yarn
 ```
 
-3. Inicie o servidor de desenvolvimento:
+3. Start the development server:
 ```bash
 npm run dev
-# ou
+# or
 yarn dev
 ```
 
-4. Para visualizar o build de produção:
+4. To preview the production build:
 ```bash
 npm run preview
-# ou
+# or
 yarn preview
 ```
 
-5. Abra o navegador em `http://localhost:5173`
+5. Open your browser at `http://localhost:5173`
 
 ## 🏗️ Project Structure
 
@@ -95,21 +95,21 @@ src/
 
 ```bash
 npm run build
-# ou
+# or
 yarn build
 ```
 
-Isso irá gerar o build de produção na pasta `dist`.
+This will generate the production build in the `dist` folder.
 
 ## 🧪 Running Tests
 
 ```bash
 npm test
-# ou
+# or
 yarn test
 ```
 
-> Os testes são executados com cobertura utilizando Vitest.
+> Tests are run with coverage using Vitest.
 
 ## 🤝 Contributing
 

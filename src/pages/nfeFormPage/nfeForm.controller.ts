@@ -3,7 +3,7 @@ import type { ChangeEvent, FormEvent } from "react";
 import type { NfeFormInterface as NfeFormInterfaceEn } from "@/interfaces/formInterface";
 import { initialValuesEn as initialValuesEn } from "./constants/nfeFormInitialValues";
 import { AlertContext } from "@/context/alertContext/AlertContext";
-import { maskCpfCnpj, maskCep, maskPhone, isValidCpf, isValidCnpj } from "@/lib/regex";
+import { maskCpfCnpj, maskCep, maskPhone, isValidCpf, isValidCnpj, maskInscricaoEstadualRS, maskInscricaoMunicipalPortoAlegre } from "@/lib/regex";
 import { useCepApi } from "@/context/cepApiContext/CepApiContext";
 
 export function handleNfeFormChange(
@@ -66,6 +66,52 @@ export function handleNfeFormChange(
   }
   if (name === "issuer.phone" || name === "recipient.phone") {
     const maskedValue = maskPhone(value);
+    if (name.startsWith("issuer.")) {
+      const field = name.replace("issuer.", "");
+      setValues((prev) => ({
+        ...prev,
+        issuer: {
+          ...prev.issuer,
+          [field]: maskedValue,
+        },
+      }));
+    } else if (name.startsWith("recipient.")) {
+      const field = name.replace("recipient.", "");
+      setValues((prev) => ({
+        ...prev,
+        recipient: {
+          ...prev.recipient,
+          [field]: maskedValue,
+        },
+      }));
+    }
+    return;
+  }
+  if (name === "issuer.stateRegistration" || name === "recipient.stateRegistration") {
+    const maskedValue = maskInscricaoEstadualRS(value);
+    if (name.startsWith("issuer.")) {
+      const field = name.replace("issuer.", "");
+      setValues((prev) => ({
+        ...prev,
+        issuer: {
+          ...prev.issuer,
+          [field]: maskedValue,
+        },
+      }));
+    } else if (name.startsWith("recipient.")) {
+      const field = name.replace("recipient.", "");
+      setValues((prev) => ({
+        ...prev,
+        recipient: {
+          ...prev.recipient,
+          [field]: maskedValue,
+        },
+      }));
+    }
+    return;
+  }
+  if (name === "issuer.municipalRegistration" || name === "recipient.municipalRegistration") {
+    const maskedValue = maskInscricaoMunicipalPortoAlegre(value);
     if (name.startsWith("issuer.")) {
       const field = name.replace("issuer.", "");
       setValues((prev) => ({

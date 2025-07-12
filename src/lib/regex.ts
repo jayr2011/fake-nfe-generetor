@@ -77,3 +77,20 @@ export function isValidCnpj(cnpj: string): boolean {
   result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
   return result === Number(verifiers.charAt(1));
 }
+
+export function maskInscricaoEstadualRS(value: string): string {
+  const onlyNumbers = value.replace(/\D/g, "").slice(0, 12);
+  if (!onlyNumbers.startsWith("1")) return onlyNumbers;
+  // Aplica máscara progressiva conforme a quantidade de dígitos
+  let masked = onlyNumbers;
+  if (onlyNumbers.length > 1) masked = masked.replace(/^(\d)(\d{0,3})/, "$1.$2");
+  if (onlyNumbers.length > 4) masked = masked.replace(/^(\d)\.(\d{3})(\d{0,3})/, "$1.$2.$3");
+  if (onlyNumbers.length > 7) masked = masked.replace(/^(\d)\.(\d{3})\.(\d{3})(\d{0,5})/, "$1.$2.$3.$4");
+  return masked;
+}
+
+export function maskInscricaoMunicipalPortoAlegre(value: string): string {
+  const onlyNumbers = value.replace(/\D/g, "").slice(0, 7);
+  if (onlyNumbers.length <= 6) return onlyNumbers;
+  return onlyNumbers.replace(/(\d{6})(\d)/, "$1-$2");
+}
