@@ -12,7 +12,10 @@ export function AlertProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
   }
 
-  const value: AlertContextProps = { isOpen, open, close };
+  const value: AlertContextProps = {
+    isOpen, open, close,
+    error: null
+  };
 
   return (
     <AlertContext.Provider value={value}>
