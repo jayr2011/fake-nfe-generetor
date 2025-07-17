@@ -5,11 +5,23 @@ import nfseLogo from "@/assets/img/nfse.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea"
 import { useNfeFormController as useNfeFormControllerEn } from "./nfeForm.controller";
+import { formatToBRL } from "@/lib/formatToBRL";
 import SelectComponent from "@/components/selectComponent/SelectComponent";
 import { BrushCleaning, FileCheck2 } from "lucide-react";
 
 
 function NfeFormPage() {
+  function handleUnitValueChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value.replace(/[^\d]/g, "");
+    const numeric = raw ? String(parseInt(raw, 10)).padStart(3, "0") : "000";
+    // Atualiza o valor no formato aceito pelo controller
+    handleChange({
+      target: {
+        name: "service.unitValue",
+        value: (parseInt(numeric, 10) / 100).toString(),
+      }
+    } as unknown as React.ChangeEvent<HTMLInputElement>);
+  }
   const {
     values,
     handleChange,
@@ -27,6 +39,10 @@ function NfeFormPage() {
     recipientCityDisabled,
     issuerCpfError,
     recipientCpfError,
+    handleOpenConfirmAlert,
+    isConfirmAlert,
+    closeConfirmAlert,
+    handleConfirmNoteCriation
   } = useNfeFormControllerEn();
 
   return (
@@ -40,6 +56,18 @@ function NfeFormPage() {
         onClickAction={handleConfirmReset}
         onClickCancel={close}
         open={isOpen}
+        openChange={open => open ? open : close()}
+      />
+      )}
+      {isConfirmAlert() && (
+      <AlertComponent
+        title="Atenção"
+        description="Você irá gerar uma nota fiscal de teste, mas tenha em mente que a mesma é para efeito de um projeto pessoal e não tem validade legal."
+        cancelButtonText="CANCELAR"
+        actionButtonText="GERAR NFS-e"
+        onClickAction={() => handleConfirmNoteCriation(values)}
+        onClickCancel={closeConfirmAlert}
+        open={isConfirmAlert()}
         openChange={open => open ? open : close()}
       />
       )}
@@ -151,7 +179,13 @@ function NfeFormPage() {
                 <Textarea placeholder="Descrição detalhada do serviço" name="service.description" value={values.service.description} onChange={handleChange} />
               </div>
               <div className="nfe-form__field mt-2">
-                <InputComponent type="number" placeholder="Valor Unitário" name="service.unitValue" value={values.service.unitValue} onChange={handleChange} />
+                <InputComponent
+                  type="text"
+                  placeholder="Valor Unitário"
+                  name="service.unitValue"
+                  value={formatToBRL(values.service.unitValue)}
+                  onChange={handleUnitValueChange}
+                />
               </div>
               <div className="nfe-form__field mt-2">
                 <InputComponent type="number" placeholder="Quantidade" name="service.quantity" value={values.service.quantity} onChange={handleChange} />
@@ -162,7 +196,7 @@ function NfeFormPage() {
             </div>
           </div>
           <div className="nfe-form__button flex justify-center mt-5">
-            <ButtonComponent icon={FileCheck2} type="submit" styleClass="w-56" label="Gerar DANFE" />
+            <ButtonComponent icon={FileCheck2} onClick={handleOpenConfirmAlert} type="button" styleClass="w-56" label="Gerar DANFE" />
           </div>
           <div className="nfe-form__reset-button flex justify-center mt-2">
             <ButtonComponent icon={BrushCleaning} type="button" onClick={handleResetClick} styleClass="w-56" label="Limpar formuário" />

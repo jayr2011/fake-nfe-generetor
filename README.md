@@ -1,3 +1,4 @@
+
 # Fake NFE Generator
 
 <div align="center">
@@ -12,7 +13,7 @@
 
 ## 📋 Overview
 
-**Fake NFE Generator** is a modern web application designed to generate Brazilian Electronic Invoice (NFS-e) documents quickly and efficiently. This tool helps businesses create and download professional-looking electronic invoice PDFs with just a few clicks.
+**Fake NFE Generator** is a modern web application designed to quickly and efficiently generate Brazilian Electronic Invoice (NFS-e) documents. This tool helps businesses create and download professional electronic invoice PDFs in just a few clicks.
 
 Created by **Jair Costa**
 
@@ -25,19 +26,27 @@ Created by **Jair Costa**
 - **PDF Generation**: Download invoices as PDF documents ready for sharing
 - **Modern UI**: Clean, intuitive interface built with React and TailwindCSS
 
-## 🛠️ Technologies
+## 🛠️ Technologies & Architecture
 
 - **Frontend**: React 19, TypeScript
 - **Styling**: TailwindCSS, SASS
 - **State Management**: React Context API, React Hooks
-- **Form Handling**: React Hook Form
+- **Form Handling**: React Hook Form, validation with Zod
 - **API Integration**: Axios
 - **Build Tool**: Vite
 - **UI Components**: Radix UI
-- **Ícones**: lucide-react
-- **Animações**: tw-animate-css
+- **Icons**: lucide-react
+- **Animations**: tw-animate-css
 - **Testing**: Vitest, Testing Library
 - **Code Quality**: ESLint, TypeScript-ESLint
+- **Internationalization**: react-i18next
+
+### Architecture
+
+- Separation between container components (`*.controller.tsx`) and presentational components (`*.view.tsx`)
+- Component-oriented modularization, scalability, and testability
+- Responsive and high-performance design for mobile webviews
+- Accessibility best practices (WCAG)
 
 ## 🚀 Getting Started
 
@@ -51,7 +60,7 @@ Created by **Jair Costa**
 1. Clone the repository:
 ```bash
 git clone https://github.com/jayr2011/fake-nfe-generetor.git
-cd fake-nfe-generator
+cd fake-nfe-generetor
 ```
 
 2. Install dependencies:
@@ -77,7 +86,7 @@ yarn preview
 
 5. Open your browser at `http://localhost:5173`
 
-## 🏗️ Project Structure
+## 🏗️ Project Structure & Patterns
 
 ```
 src/
@@ -87,6 +96,8 @@ src/
 ├── interfaces/        # TypeScript interfaces
 ├── lib/               # Utility functions and helpers
 ├── pages/             # Application pages
+│   ├── *.controller.tsx   # Container components (logic, integration, state)
+│   ├── *.view.tsx         # Presentational components (UI, animations, skeletons)
 ├── services/          # API services
 └── main.tsx           # Application entry point
 ```
@@ -121,7 +132,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📬 Contact
 
-Jair Costa - [GitHub](https://github.com/jayr23)
+Jair Costa - [GitHub](https://github.com/jayr2011)
 
 ---
 

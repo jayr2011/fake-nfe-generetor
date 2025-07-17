@@ -5,6 +5,7 @@ import { initialValuesEn as initialValuesEn } from "./constants/nfeFormInitialVa
 import { AlertContext } from "@/context/alertContext/AlertContext";
 import { maskCpfCnpj, maskCep, maskPhone, isValidCpf, isValidCnpj, maskInscricaoEstadualRS, maskInscricaoMunicipalPortoAlegre } from "@/lib/regex";
 import { useCepApi } from "@/context/cepApiContext/CepApiContext";
+import { useApi } from "@/context/apiContext/apiContext";
 
 export function handleNfeFormChange(
   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -170,9 +171,11 @@ export function handleNfeFormChange(
 
 export function useNfeFormController() {
   const [values, setValues] = useState<NfeFormInterfaceEn>(initialValuesEn);
+  const [useConfirmAlert, setConfirmAlert] = useState(false);
   const [issuerCpfError, setIssuerCpfError] = useState<string | null>(null);
   const [recipientCpfError, setRecipientCpfError] = useState<string | null>(null);
   const [recipientCityDisabled, setRecipientCityDisabled] = useState(false);
+  const { createNfe, isLoadingCreate, isErrorCreating } = useApi();
   const alertContext = useContext(AlertContext);
   const {
     fetchAddressData,
@@ -188,7 +191,6 @@ export function useNfeFormController() {
   if (!alertContext) {
     throw new Error("AlertContext not provided.");
   }
-
   const { open, close, isOpen } = alertContext;
 
   useEffect(() => {
@@ -256,12 +258,34 @@ export function useNfeFormController() {
     close();
   }
 
+  function handleConfirmNoteCriation(values: NfeFormInterfaceEn) {
+    createNfe(values)
+  }
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    console.log("Form submitted with values:", values);
+    handleConfirmNoteCriation(values);
+  }
+
+  function handleOpenConfirmAlert() {
+    setConfirmAlert(true);
+  }
+
+  function isConfirmAlert() {
+    return useConfirmAlert;
+  }
+
+  function closeConfirmAlert() {
+    setConfirmAlert(false);
   }
 
   return {
+    closeConfirmAlert,
+    isConfirmAlert,
+    handleOpenConfirmAlert,
+    handleConfirmNoteCriation,
+    isLoadingCreate,
+    isErrorCreating,
     values,
     handleChange,
     handleSubmit,

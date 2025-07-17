@@ -3,9 +3,12 @@ import AppRoutes from './routes'
 import './index.css'
 import { AlertProvider } from '@/context/alertContext/AlertProvider'
 import { CepApiProvider } from './context/cepApiContext/CepApiProvider'
+import { ApiProvider } from './context/apiContext/apiProvider'
 
 function App() {
   return (
+      
+    <ApiProvider>
     <CepApiProvider>
       <AlertProvider>
         <BrowserRouter>
@@ -13,6 +16,7 @@ function App() {
         </BrowserRouter>
       </AlertProvider>
     </CepApiProvider>
+    </ApiProvider>
   )
 }
 
