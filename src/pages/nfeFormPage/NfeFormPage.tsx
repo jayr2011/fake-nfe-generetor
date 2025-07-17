@@ -14,7 +14,6 @@ function NfeFormPage() {
   function handleUnitValueChange(e: React.ChangeEvent<HTMLInputElement>) {
     const raw = e.target.value.replace(/[^\d]/g, "");
     const numeric = raw ? String(parseInt(raw, 10)).padStart(3, "0") : "000";
-    // Atualiza o valor no formato aceito pelo controller
     handleChange({
       target: {
         name: "service.unitValue",

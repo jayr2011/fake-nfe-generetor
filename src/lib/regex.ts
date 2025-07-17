@@ -26,12 +26,10 @@ export function maskPhone(value: string): string {
   if (!value) return "";
   const digits = value.replace(/\D/g, "").slice(0, 11);
   if (digits.length <= 10) {
-    // (99) 9999-9999
     return digits
       .replace(/(\d{2})(\d)/, "($1) $2")
       .replace(/(\d{4})(\d)/, "$1-$2");
   }
-  // (99) 99999-9999
   return digits
     .replace(/(\d{2})(\d)/, "($1) $2")
     .replace(/(\d{5})(\d)/, "$1-$2");
@@ -81,7 +79,6 @@ export function isValidCnpj(cnpj: string): boolean {
 export function maskInscricaoEstadualRS(value: string): string {
   const onlyNumbers = value.replace(/\D/g, "").slice(0, 12);
   if (!onlyNumbers.startsWith("1")) return onlyNumbers;
-  // Aplica máscara progressiva conforme a quantidade de dígitos
   let masked = onlyNumbers;
   if (onlyNumbers.length > 1) masked = masked.replace(/^(\d)(\d{0,3})/, "$1.$2");
   if (onlyNumbers.length > 4) masked = masked.replace(/^(\d)\.(\d{3})(\d{0,3})/, "$1.$2.$3");

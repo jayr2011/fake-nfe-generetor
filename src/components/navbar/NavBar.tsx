@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom"
 import brazilLogo from "@/assets/img/brazil.png";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function NavBar() {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
     const menuRef = useRef<HTMLUListElement>(null);
 
     function isActive(path: string) {
@@ -14,9 +15,47 @@ export function NavBar() {
 
     function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
         if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-            setMenuOpen(false);
+            handleMenuClose();
         }
     }
+
+    function handleMenuToggle() {
+        if (menuOpen) {
+            handleMenuClose();
+        } else {
+            handleMenuOpen();
+        }
+    }
+
+    function handleMenuOpen() {
+        setMenuOpen(true);
+        setTimeout(() => setIsAnimating(true), 10);
+    }
+
+    function handleMenuClose() {
+        setIsAnimating(false);
+        setTimeout(() => setMenuOpen(false), 300);
+    }
+
+    useEffect(() => {
+        function handleEsc(e: KeyboardEvent) {
+            if (e.key === 'Escape' && menuOpen) {
+                handleMenuClose();
+            }
+        }
+
+        if (menuOpen) {
+            document.addEventListener('keydown', handleEsc);
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleEsc);
+            document.body.style.overflow = 'unset';
+        };
+    }, [menuOpen]);
 
     return (
         <nav className="bg-gray-100 border-b border-gray-200">
@@ -26,24 +65,26 @@ export function NavBar() {
                     <img src={brazilLogo} alt="Logo Brasil" className="w-6 h-6" />
                 </Link>
                 <button
-                    className="md:hidden mb-2 mr-22 mt-2 z-50"
+                    className="md:hidden mb-2 mr-22 mt-2 z-50 transition-transform duration-300 ease-in-out hover:scale-110"
                     aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
-                    onClick={() => setMenuOpen(!menuOpen)}
+                    onClick={handleMenuToggle}
                 >
-                    {menuOpen ? (
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                    ) : (
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
-                            <line x1="3" y1="12" x2="21" y2="12" />
-                            <line x1="3" y1="6" x2="21" y2="6" />
-                            <line x1="3" y1="18" x2="21" y2="18" />
-                        </svg>
-                    )}
+                    <div className="relative w-8 h-8">
+                        <div className={`absolute inset-0 transition-all duration-300 ease-in-out ${menuOpen ? 'opacity-0 rotate-45' : 'opacity-100 rotate-0'}`}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+                                <line x1="3" y1="12" x2="21" y2="12" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <line x1="3" y1="18" x2="21" y2="18" />
+                            </svg>
+                        </div>
+                        <div className={`absolute inset-0 transition-all duration-300 ease-in-out ${menuOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-45'}`}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </div>
+                    </div>
                 </button>
-                {/* Menu padrão para md+ */}
                 <ul className="hidden md:flex space-x-8 text-sm font-medium text-gray-800 md:ml-0 md:pl-0">
                     <li>
                         <Link
@@ -81,46 +122,51 @@ export function NavBar() {
                 {menuOpen && (
                     <>
                         <div
-                            className="fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 md:hidden"
+                            className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ease-in-out ${
+                                isAnimating ? 'opacity-100' : 'opacity-0'
+                            }`}
                             onClick={handleOverlayClick}
                         />
                         <ul
                             ref={menuRef}
-                            className="flex flex-col fixed top-16 left-0 w-full bg-white shadow-lg rounded-b z-50 md:hidden p-[5px]"
-                            style={{ opacity: menuOpen ? 1 : 0, translate: menuOpen ? '0' : '0 -20px' }}
+                            className={`flex flex-col fixed top-16 left-0 w-full bg-white shadow-lg rounded-b z-50 md:hidden p-[5px] transform transition-all duration-300 ease-in-out ${
+                                isAnimating 
+                                    ? 'opacity-100 translate-y-0 scale-100' 
+                                    : 'opacity-0 -translate-y-4 scale-95'
+                            }`}
                         >
-                            <li>
+                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '100ms' : '0ms' }}>
                                 <Link
                                     to="/"
-                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 transition-all duration-300 ease-in-out ${isActive("/") ? "bg-blue-100 rounded-md" : ""}`}
-                                    onClick={() => setMenuOpen(false)}
+                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/") ? "bg-blue-100 rounded-md" : ""}`}
+                                    onClick={handleMenuClose}
                                 >
                                     Início
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '150ms' : '0ms' }}>
                                 <Link
                                     to="/nfe-form"
-                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 transition-all duration-300 ease-in-out ${isActive("/nfe-form") ? "bg-blue-100 rounded-md" : ""}`}
-                                    onClick={() => setMenuOpen(false)}
+                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/nfe-form") ? "bg-blue-100 rounded-md" : ""}`}
+                                    onClick={handleMenuClose}
                                 >
                                     Gerar Nfe
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '200ms' : '0ms' }}>
                                 <Link
                                     to="/about"
-                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 transition-all duration-300 ease-in-out ${isActive("/about") ? "bg-blue-100 rounded-md" : ""}`}
-                                    onClick={() => setMenuOpen(false)}
+                                    className={`block px-4 py-3 border-b border-gray-200 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/about") ? "bg-blue-100 rounded-md" : ""}`}
+                                    onClick={handleMenuClose}
                                 >
                                     Sobre Nós
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '250ms' : '0ms' }}>
                                 <Link
                                     to="/my-nfe"
-                                    className={`block px-4 py-3 hover:text-red-600 transition-all duration-300 ease-in-out ${isActive("/my-nfe") ? "bg-blue-100 rounded-md" : ""}`}
-                                    onClick={() => setMenuOpen(false)}
+                                    className={`block px-4 py-3 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/my-nfe") ? "bg-blue-100 rounded-md" : ""}`}
+                                    onClick={handleMenuClose}
                                 >
                                     Minhas NFEs
                                 </Link>
