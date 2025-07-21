@@ -118,6 +118,14 @@ export function NavBar() {
                             Minhas NFEs
                         </Link>
                     </li>
+                    <li>
+                        <Link
+                            to="/register"
+                            className={`hover:text-red-600 transition-all duration-300 ease-in-out ${isActive("/register") ? "bg-blue-100 rounded-md px-2 py-1" : ""}`}
+                        >
+                            Cadastrar sua conta
+                        </Link>
+                    </li>
                 </ul>
                 {menuOpen && (
                     <>
@@ -169,6 +177,15 @@ export function NavBar() {
                                     onClick={handleMenuClose}
                                 >
                                     Minhas NFEs
+                                </Link>
+                            </li>
+                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '300ms' : '0ms' }}>
+                                <Link
+                                    to="/register"
+                                    className={`block px-4 py-3 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/register") ? "bg-blue-100 rounded-md" : ""}`}
+                                    onClick={handleMenuClose}
+                                >
+                                    Cadastrar sua conta
                                 </Link>
                             </li>
                         </ul>

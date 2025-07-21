@@ -23,7 +23,31 @@ export function ApiProvider({ children }: { children: ReactNode }) {
       },
     };
     try {
-      await api.post("/create", payload);
+      const response = await api.post("/create", payload, {
+        responseType: "blob",
+        headers: {
+          Accept: "application/pdf",
+        },
+      });
+
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      const newWindow = window.open(pdfUrl, "_blank");
+
+      if (!newWindow) {
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = `nfe-${Date.now()}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(pdfUrl);
+      }, 1000);
+
     } catch (err) {
       setIsErrorCreating(`Erro ao criar NFe: ${err instanceof Error ? err.message : "Erro desconhecido"}`);
     } finally {

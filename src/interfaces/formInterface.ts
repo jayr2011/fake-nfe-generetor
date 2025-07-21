@@ -28,6 +28,7 @@ export interface ServiceDescription {
   unitValue: string;
   quantity: string;
   discount: string;
+  createdAt: string;
 }
 
 export interface NfeFormInterface {

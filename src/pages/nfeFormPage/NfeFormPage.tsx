@@ -3,6 +3,8 @@ import ButtonComponent from "@/components/buttons/ButtonComponent";
 import AlertComponent from "@/components/alertComponent/AlertComponent";
 import nfseLogo from "@/assets/img/nfse.png";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 import { Textarea } from "@/components/ui/textarea"
 import { useNfeFormController as useNfeFormControllerEn } from "./nfeForm.controller";
 import { formatToBRL } from "@/lib/formatToBRL";
@@ -46,6 +48,11 @@ function NfeFormPage() {
 
   return (
     <div className="nfe-form px-3 py-3 flex flex-col">
+      <Link className="flex justify-center" to="/register">
+        <Button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:scale-105 hover:from-blue-600 hover:to-blue-800 transition-all duration-200 ">
+          Cadastre-se agora
+        </Button>
+      </Link>
       {isOpen && (
       <AlertComponent
         title="Atenção"

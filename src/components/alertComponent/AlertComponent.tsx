@@ -23,18 +23,24 @@ interface AlertComponentProps {
 function AlertComponent(props: AlertComponentProps) {
   return (
     <AlertDialog open={props.open} onOpenChange={props.openChange}>
-    <AlertDialogContent>
+      <AlertDialogContent>
         <AlertDialogHeader>
-        <AlertDialogTitle>{props.title}</AlertDialogTitle>
-        <AlertDialogDescription>
+          <AlertDialogTitle>{props.title}</AlertDialogTitle>
+          <AlertDialogDescription>
             {props.description}
-        </AlertDialogDescription>
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-        <AlertDialogCancel onClick={props.onClickCancel}>{props.cancelButtonText}</AlertDialogCancel>
-        <AlertDialogAction onClick={props.onClickAction}>{props.actionButtonText}</AlertDialogAction>
+          <AlertDialogCancel onClick={props.onClickCancel}>
+            {props.cancelButtonText}
+          </AlertDialogCancel>
+          {props.actionButtonText && (
+            <AlertDialogAction onClick={props.onClickAction}>
+              {props.actionButtonText}
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
-    </AlertDialogContent>
+      </AlertDialogContent>
     </AlertDialog>
   );
 }
