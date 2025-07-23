@@ -23,14 +23,16 @@ export function ApiProvider({ children }: { children: ReactNode }) {
       },
     };
     try {
-      const response = await api.post("/create", payload, {
+      const response = await api.post("nfe/create", payload);
+      const createNote = response.data;
+      const idNote = createNote.id;
+
+      const pdfResponse = await api.get(`/render-nfe/pdf/${idNote}`, {
         responseType: "blob",
-        headers: {
-          Accept: "application/pdf",
-        },
+        headers: { Accept: "application/pdf" },
       });
 
-      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      const pdfBlob = new Blob([pdfResponse.data], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
 
       const newWindow = window.open(pdfUrl, "_blank");
