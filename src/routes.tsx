@@ -6,6 +6,7 @@ import AboutComponent from "./pages/aboutUs/AboutComponent";
 import MyNfe from "./pages/myNfe/MyNfe";
 import RegisterPage from "./pages/register/RegisterPage";
 import RegisterFormPage from "./pages/register/RegisterFormPage";
+import LoginPage from "./pages/login/LoginPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import { Footer } from "./components/Footer/Footer";
 
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         <Route path="/my-nfe" element={<MyNfe />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/register-form" element={<RegisterFormPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
     </Routes>
     <Footer />

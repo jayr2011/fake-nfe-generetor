@@ -259,7 +259,8 @@ export function useNfeFormController() {
   }
 
   function handleConfirmNoteCriation(values: NfeFormInterfaceEn) {
-    createNfe(values)
+    setConfirmAlert(false);
+    createNfe(values);
   }
 
   function handleSubmit(event: FormEvent) {

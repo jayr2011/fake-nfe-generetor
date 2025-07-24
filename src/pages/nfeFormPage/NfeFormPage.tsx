@@ -43,7 +43,9 @@ function NfeFormPage() {
     handleOpenConfirmAlert,
     isConfirmAlert,
     closeConfirmAlert,
-    handleConfirmNoteCriation
+    handleConfirmNoteCriation,
+    isLoadingCreate,
+    isErrorCreating
   } = useNfeFormControllerEn();
 
   return (
@@ -77,6 +79,14 @@ function NfeFormPage() {
         openChange={open => open ? open : close()}
       />
       )}
+      {isErrorCreating && (
+        <div className="w-full flex justify-center mb-4">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-xl w-full text-center shadow">
+            <strong className="font-bold">Erro ao gerar nota:</strong>
+            <span className="block mt-1">{isErrorCreating}</span>
+          </div>
+        </div>
+      )}
       <img
         src={nfseLogo}
         alt="Logo NFS-e"
@@ -84,69 +94,77 @@ function NfeFormPage() {
         style={{ maxWidth: "100%", height: "auto" }}
       />
       <h1 className="nfe-form__title text-2xl font-bold mb-4">Emissão de Nota Fiscal de Serviço Eletrônica (NFS-e)</h1>
-      <p className="nfe-form__description mt-4 text-gray-600">
+      <p className="nfe-form__description mt-4 text-grey-600 mb-4">
         Preencha os dados do cliente, dos serviços prestados e baixe a NFS-e (Nota Fiscal de Serviço Eletrônica) em PDF em poucos segundos.
       </p>
+      {isLoadingCreate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-200 bg-opacity-80">
+          <div className="flex flex-col items-center">
+            <div className="animate-spin rounded-full border-8 border-t-blue-500 border-b-blue-300 border-gray-300 h-20 w-20 mb-6"></div>
+            <span className="text-gray-700 text-lg font-semibold drop-shadow">Gerando nota fiscal...</span>
+          </div>
+        </div>
+      )}
       <div className="nfe-form__form">
         <form onSubmit={handleSubmit} method="post" className="nfe-form__fields flex flex-col">
           <div className="nfe-form__input-group-company  mt-2">
-          <h2 className="nfe-form__subtitle text-xl font-semibold mb-2">Dados do Emitente</h2>
+            <h2 className="nfe-form__subtitle text-xl font-semibold mb-2">Dados do Emitente</h2>
             <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="CNPJ/CPF" name="issuer.cpfCnpj" value={values.issuer.cpfCnpj} onChange={handleChange} />
-            {issuerCpfError && <div className="text-xs text-red-500 mt-1">{issuerCpfError}</div>}
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Razão Social" name="issuer.corporateName" value={values.issuer.corporateName} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Nome Fantasia" name="issuer.tradeName" value={values.issuer.tradeName} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Endereço (logradouro, número, bairro)" name="issuer.address" value={values.issuer.address} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="CEP" name="issuer.zipCode" value={values.issuer.zipCode} onChange={handleChange} />
-            {issuerIsLoading && values.issuer.zipCode.replace(/\D/g, "").length === 8 && <Skeleton className="w-full h-6 mt-2" />}
-            {issuerAddressData && values.issuer.zipCode.replace(/\D/g, "").length === 8 && (
-              <div className="text-xs text-gray-700 mt-2">
-                {issuerAddressData.logradouro} - {issuerAddressData.bairro} - {issuerAddressData.localidade}/{issuerAddressData.uf}
-              </div>
-            )}
-            {issuerCepError && <div className="text-xs text-red-500 mt-2">{issuerCepError}</div>}
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="tel" placeholder="Telefone" name="issuer.phone" value={values.issuer.phone} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="email" placeholder="E-mail" name="issuer.email" value={values.issuer.email} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Inscrição Estadual" name="issuer.stateRegistration" value={values.issuer.stateRegistration} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="Inscrição Municipal" name="issuer.municipalRegistration" value={values.issuer.municipalRegistration} onChange={handleChange} />
-          </div>
-          <div className="nfe-form__field mt-2">
-            <SelectComponent
-              width="w-full"
-              items={["MEI", "Simples Nacional"]}
-              placeholder="Regime Tributário"
-              value={values.issuer.taxRegime}
-              onValueChange={value => handleChange({
-                target: {
-                  name: "issuer.taxRegime",
-                  value,
-                }
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              } as any)}
-            />
-          </div>
+              <InputComponent type="text" placeholder="CNPJ/CPF" name="issuer.cpfCnpj" value={values.issuer.cpfCnpj} onChange={handleChange} />
+              {issuerCpfError && <div className="text-xs text-red-500 mt-1">{issuerCpfError}</div>}
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="Razão Social" name="issuer.corporateName" value={values.issuer.corporateName} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="Nome Fantasia" name="issuer.tradeName" value={values.issuer.tradeName} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="Endereço (logradouro, número, bairro)" name="issuer.address" value={values.issuer.address} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="CEP" name="issuer.zipCode" value={values.issuer.zipCode} onChange={handleChange} />
+              {issuerIsLoading && values.issuer.zipCode.replace(/\D/g, "").length === 8 && <Skeleton className="w-full h-6 mt-2" />}
+              {issuerAddressData && values.issuer.zipCode.replace(/\D/g, "").length === 8 && (
+                <div className="text-xs text-gray-700 mt-2">
+                  {issuerAddressData.logradouro} - {issuerAddressData.bairro} - {issuerAddressData.localidade}/{issuerAddressData.uf}
+                </div>
+              )}
+              {issuerCepError && <div className="text-xs text-red-500 mt-2">{issuerCepError}</div>}
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="tel" placeholder="Telefone" name="issuer.phone" value={values.issuer.phone} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="email" placeholder="E-mail" name="issuer.email" value={values.issuer.email} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="Inscrição Estadual" name="issuer.stateRegistration" value={values.issuer.stateRegistration} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <InputComponent type="text" placeholder="Inscrição Municipal" name="issuer.municipalRegistration" value={values.issuer.municipalRegistration} onChange={handleChange} />
+            </div>
+            <div className="nfe-form__field mt-2">
+              <SelectComponent
+                width="w-full"
+                items={["MEI", "Simples Nacional"]}
+                placeholder="Regime Tributário"
+                value={values.issuer.taxRegime}
+                onValueChange={value => handleChange({
+                  target: {
+                    name: "issuer.taxRegime",
+                    value,
+                  }
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } as any)}
+              />
+            </div>
           </div>
           <div className="nfe-form__input-group-client mt-4">
-          <h2 className="nfe-form__subtitle text-xl font-semibold mb-2">Dados do Destinatário</h2>
+            <h2 className="nfe-form__subtitle text-xl font-semibold mb-2">Dados do Destinatário</h2>
             <div className="nfe-form__field mt-2">
-            <InputComponent type="text" placeholder="CNPJ/CPF" name="recipient.cpfCnpj" value={values.recipient.cpfCnpj} onChange={handleChange} />
-            {recipientCpfError && <div className="text-xs text-red-500 mt-1">{recipientCpfError}</div>}
+              <InputComponent type="text" placeholder="CNPJ/CPF" name="recipient.cpfCnpj" value={values.recipient.cpfCnpj} onChange={handleChange} />
+              {recipientCpfError && <div className="text-xs text-red-500 mt-1">{recipientCpfError}</div>}
             </div>
             <div className="nfe-form__field mt-2">
               <InputComponent type="text" placeholder="Nome/Razão Social" name="recipient.corporateName" value={values.recipient.corporateName} onChange={handleChange} />
