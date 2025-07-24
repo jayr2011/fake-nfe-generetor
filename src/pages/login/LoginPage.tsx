@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AlertComponent from "@/components/alertComponent/AlertComponent";
 import { useState } from "react";
-import { useLoginController } from "./useLoginController";
+import { useLoginController } from "./useLogin.controller";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from 'lucide-react';
 
@@ -85,7 +85,7 @@ export function LoginPage() {
           className="bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:scale-105 hover:from-blue-600 hover:to-blue-800 transition-all duration-200 mt-4"
           disabled={loading}
         >
-          Entrar
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
       </form>
     </div>

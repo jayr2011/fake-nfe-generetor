@@ -154,11 +154,18 @@ export function handleNfeFormChange(
     }));
   } else if (name.startsWith("service.")) {
     const field = name.replace("service.", "");
+    let newValue = value;
+    // Máscara de moeda para unitValue
+    if (field === "unitValue") {
+      const onlyDigits = value.replace(/\D/g, "");
+      const number = parseFloat(onlyDigits) / 100;
+      newValue = isNaN(number) ? "" : number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
     setValues((prev) => ({
       ...prev,
       service: {
         ...prev.service,
-        [field]: value,
+        [field]: newValue,
       },
     }));
   } else {

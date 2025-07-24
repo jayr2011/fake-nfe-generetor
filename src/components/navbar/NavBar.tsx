@@ -2,8 +2,12 @@ import { Link, useLocation } from "react-router-dom"
 import brazilLogo from "@/assets/img/brazil.png";
 
 import { useState, useRef, useEffect } from "react";
+import { useUserContext } from "@/context/userContext/UserContext";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 
 export function NavBar() {
+    const { user, clearUser } = useUserContext();
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -59,7 +63,40 @@ export function NavBar() {
 
     return (
         <nav className="bg-gray-100 border-b border-gray-200">
-            <div className="max-w-7xl px-2 py-4 flex flex-row-reverse items-center justify-end md:flex-row md:items-center md:justify-start md:gap-0 relative">
+            <div className="max-w-7xl px-2 py-4 flex flex-row-reverse items-center justify-between md:flex-row md:items-center md:justify-start md:gap-0 relative">
+                {user ? (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                variant="destructive"
+                                className="font-semibold"
+                                aria-label="Sair"
+                            >
+                                Sair
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Tem certeza que deseja sair?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Você será desconectado da sua conta e precisará fazer login novamente para acessar suas informações.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction asChild>
+                                    <Button variant="destructive" onClick={clearUser} aria-label="Confirmar saída">Sair</Button>
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                ) : (
+                    <Link to="/register" className="ml-5 md:mr-3">
+                        <Button variant="default" className="font-semibold bg-blue-400" aria-label="Entrar">
+                            Entrar
+                        </Button>
+                    </Link>
+                )}
                 <Link to="/" className="text-2xl font-bold text-blue-400 tracking-tight flex items-center gap-2 md:mb-0 md:mr-8">
                     Nota Brasil
                     <img src={brazilLogo} alt="Logo Brasil" className="w-6 h-6" />
@@ -173,13 +210,13 @@ export function NavBar() {
                             <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '250ms' : '0ms' }}>
                                 <Link
                                     to="/my-nfe"
-                                    className={`block px-4 py-3 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/my-nfe") ? "bg-blue-100 rounded-md" : ""}`}
+                                    className={`block px-4 py-3 border-b hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/my-nfe") ? "bg-blue-100 rounded-md" : ""}`}
                                     onClick={handleMenuClose}
                                 >
                                     Minhas NFEs
                                 </Link>
                             </li>
-                            <li className={`transform transition-all duration-300 ease-in-out ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '300ms' : '0ms' }}>
+                            <li className={`transform transition-all duration-300 ease-in-out hover:bg-gray-50 ${isAnimating ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{ transitionDelay: isAnimating ? '300ms' : '0ms' }}>
                                 <Link
                                     to="/register"
                                     className={`block px-4 py-3 hover:text-red-600 hover:bg-gray-50 transition-all duration-300 ease-in-out ${isActive("/register") ? "bg-blue-100 rounded-md" : ""}`}

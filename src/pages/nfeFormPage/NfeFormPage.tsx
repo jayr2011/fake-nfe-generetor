@@ -7,22 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { Textarea } from "@/components/ui/textarea"
 import { useNfeFormController as useNfeFormControllerEn } from "./nfeForm.controller";
-import { formatToBRL } from "@/lib/formatToBRL";
 import SelectComponent from "@/components/selectComponent/SelectComponent";
 import { BrushCleaning, FileCheck2 } from "lucide-react";
 
 
 function NfeFormPage() {
-  function handleUnitValueChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const raw = e.target.value.replace(/[^\d]/g, "");
-    const numeric = raw ? String(parseInt(raw, 10)).padStart(3, "0") : "000";
-    handleChange({
-      target: {
-        name: "service.unitValue",
-        value: (parseInt(numeric, 10) / 100).toString(),
-      }
-    } as unknown as React.ChangeEvent<HTMLInputElement>);
-  }
   const {
     values,
     handleChange,
@@ -47,6 +36,8 @@ function NfeFormPage() {
     isLoadingCreate,
     isErrorCreating
   } = useNfeFormControllerEn();
+
+
 
   return (
     <div className="nfe-form px-3 py-3 flex flex-col">
@@ -207,8 +198,10 @@ function NfeFormPage() {
                   type="text"
                   placeholder="Valor Unitário"
                   name="service.unitValue"
-                  value={formatToBRL(values.service.unitValue)}
-                  onChange={handleUnitValueChange}
+                  value={values.service.unitValue}
+                  onChange={handleChange}
+                  inputMode="numeric"
+                  autoComplete="off"
                 />
               </div>
               <div className="nfe-form__field mt-2">

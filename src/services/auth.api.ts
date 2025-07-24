@@ -1,28 +1,5 @@
 import axios from 'axios';
-
-export interface CreateUserRequest {
-  name: string;
-  email: string;
-  documentNumber: number;
-  password: string;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface UserResponse {
-  id: string;
-  name: string;
-  email: string;
-  documentNumber: number;
-}
-
-export interface LoginResponse {
-  message: string;
-  user?: UserResponse;
-}
+import type { CreateUserRequest, LoginRequest, UserResponse, LoginResponse } from '@/interfaces/UserProfile';
 
 const authApi = axios.create({
   baseURL: 'http://localhost:8080',
@@ -31,6 +8,14 @@ const authApi = axios.create({
   },
   timeout: 10000,
 });
+
+  authApi.interceptors.request.use((config) => {
+    const token = localStorage.getItem("jwt_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
 export async function createUser(userData: CreateUserRequest): Promise<UserResponse> {
   try {
@@ -49,13 +34,28 @@ export async function createUser(userData: CreateUserRequest): Promise<UserRespo
   }
 }
 
+export async function getUserProfile(): Promise<UserResponse> {
+  try {
+    const response = await authApi.get<UserResponse>('sec/user/me');
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw new Error('Usuário não autenticado');
+      }
+    }
+    throw new Error('Erro ao obter perfil do usuário. Tente novamente.');
+  }
+}
+
 export async function loginUser(loginData: LoginRequest): Promise<LoginResponse> {
   try {
-    const response = await authApi.post<string>('/auth/login', loginData);
+    const response = await authApi.post<LoginResponse>('/auth/login', loginData);
     
-    return {
-      message: response.data,
-    };
+    if(response.data.token) {
+      localStorage.setItem("jwt_token", response.data.token);
+    }
+    return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
@@ -66,23 +66,6 @@ export async function loginUser(loginData: LoginRequest): Promise<LoginResponse>
       }
     }
     throw new Error('Erro ao fazer login. Tente novamente.');
-  }
-}
-
-export async function getUserProfile(userId: string): Promise<UserResponse> {
-  try {
-    const response = await authApi.get<UserResponse>(`/sec/user/${userId}`);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        throw new Error('Usuário não encontrado');
-      }
-      if (error.response?.status === 401) {
-        throw new Error('Não autorizado');
-      }
-    }
-    throw new Error('Erro ao obter perfil do usuário. Tente novamente.');
   }
 }
 
