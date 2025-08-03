@@ -29,5 +29,6 @@ export const initialValuesEn: NfeFormInterfaceEn = {
     unitValue: "",
     quantity: "",
     discount: "",
+    createdAt: ""
   },
 };
