@@ -19,6 +19,7 @@ interface AlertComponentProps {
     onClickCancel?: () => void;
     open: boolean;
     openChange?: (open: boolean) => void;
+    children?: ReactNode;
 }
 
 function AlertComponent(props: AlertComponentProps) {
@@ -31,6 +32,7 @@ function AlertComponent(props: AlertComponentProps) {
             {props.description}
           </AlertDialogDescription>
         </AlertDialogHeader>
+        {props.children}
         <AlertDialogFooter>
           <AlertDialogCancel onClick={props.onClickCancel}>
             {props.cancelButtonText}

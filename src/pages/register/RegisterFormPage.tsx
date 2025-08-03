@@ -19,6 +19,7 @@ export function RegisterFormPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
   const [alertTitle, setAlertTitle] = useState("Erro ao cadastrar");
+  const [showLoginButton, setShowLoginButton] = useState(false);
 
 
   async function handleValidSubmit(data: any) {
@@ -31,10 +32,12 @@ export function RegisterFormPage() {
       });
       setAlertTitle("Cadastro realizado");
       setAlertMsg("Cadastro realizado com sucesso!");
+      setShowLoginButton(true);
       setAlertOpen(true);
     } catch (error: any) {
       setAlertTitle("Erro ao cadastrar");
       setAlertMsg(error.message || "Erro ao cadastrar usuário. Tente novamente.");
+      setShowLoginButton(false);
       setAlertOpen(true);
     }
   }
@@ -75,7 +78,15 @@ export function RegisterFormPage() {
           cancelButtonText="Fechar"
           open={alertOpen}
           openChange={setAlertOpen}
-        />
+        >
+          {showLoginButton && (
+            <div className="flex justify-center mt-4">
+              <Button asChild variant="default" className="bg-blue-500 text-white">
+                <a href="/login">Ir para Login</a>
+              </Button>
+            </div>
+          )}
+        </AlertComponent>
         <form
           onSubmit={handleSubmit(handleValidSubmit, handleInvalidSubmit)}
           className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-6"

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import type { CreateUserRequest, LoginRequest, UserResponse, LoginResponse } from '@/interfaces/UserProfile';
 
+const baseURL = import.meta.env.VITE_API_URL;
+
 const authApi = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },

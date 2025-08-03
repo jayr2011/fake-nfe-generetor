@@ -69,7 +69,7 @@ export function NavBar() {
                         <AlertDialogTrigger asChild>
                             <Button
                                 variant="destructive"
-                                className="font-semibold"
+                                className="font-semibold mr-3"
                                 aria-label="Sair"
                             >
                                 Sair
