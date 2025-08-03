@@ -8,10 +8,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import type { ReactNode } from "react";
 
 interface AlertComponentProps {
     title: string;
-    description: string;
+    description: ReactNode;
     cancelButtonText?: string;
     actionButtonText?: string;
     onClickAction?: () => void;

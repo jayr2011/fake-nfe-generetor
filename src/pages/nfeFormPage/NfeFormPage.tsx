@@ -59,16 +59,28 @@ function NfeFormPage() {
       />
       )}
       {isConfirmAlert() && (
-      <AlertComponent
-        title="Atenção"
-        description="Você irá gerar uma nota fiscal de teste, mas tenha em mente que a mesma é para efeito de um projeto pessoal e não tem validade legal."
-        cancelButtonText="CANCELAR"
-        actionButtonText="GERAR NFS-e"
-        onClickAction={() => handleConfirmNoteCriation(values)}
-        onClickCancel={closeConfirmAlert}
-        open={isConfirmAlert()}
-        openChange={open => open ? open : close()}
-      />
+        <AlertComponent
+          title="Atenção"
+          description={
+            <span>
+              Você irá gerar uma nota fiscal de teste, mas tenha em mente que a mesma é para um projeto pessoal e não tem validade legal. Dê referência a dados fake!<br />
+              <a
+                href="https://encurtador.com.br/3jskx"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline hover:text-blue-800 transition-colors mt-2 block"
+              >
+                Gerar dados de empresa fake para testes
+              </a>
+            </span>
+          }
+          cancelButtonText="CANCELAR"
+          actionButtonText="GERAR NFS-e"
+          onClickAction={() => handleConfirmNoteCriation(values)}
+          onClickCancel={closeConfirmAlert}
+          open={isConfirmAlert()}
+          openChange={open => open ? open : close()}
+        />
       )}
       {isErrorCreating && (
         <div className="w-full flex justify-center mb-4">

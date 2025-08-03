@@ -2,44 +2,85 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRegisterFormController } from "./registerForm.controller";
 import AlertComponent from "@/components/alertComponent/AlertComponent";
-import {useState} from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
+import { createUser } from "@/services/auth.api";
 
 export function RegisterFormPage() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     errors,
     isSubmitting,
-    onSubmit,
     handleDocumentChange,
     } = useRegisterFormController();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
+  const [alertTitle, setAlertTitle] = useState("Erro ao cadastrar");
+
+
+  async function handleValidSubmit(data: any) {
+    try {
+      await createUser({
+        name: data.name,
+        email: data.email,
+        documentNumber: data.documentNumber.replace(/\D/g, ""),
+        password: data.password,
+      });
+      setAlertTitle("Cadastro realizado");
+      setAlertMsg("Cadastro realizado com sucesso!");
+      setAlertOpen(true);
+    } catch (error: any) {
+      setAlertTitle("Erro ao cadastrar");
+      setAlertMsg(error.message || "Erro ao cadastrar usuário. Tente novamente.");
+      setAlertOpen(true);
+    }
+  }
 
   function handleInvalidSubmit() {
+    const fieldLabels: Record<string, string> = {
+      name: "Nome",
+      email: "E-mail",
+      documentNumber: "Documento (CPF/CNPJ)",
+      password: "Senha",
+      confirmPassword: "Confirmação de Senha",
+    };
+
     const errorFields = Object.entries(errors)
       .filter(([, value]) => value?.message)
-      .map(([key, value]) => `${key}: ${value?.message}`);
+      .map(([key, value]) => `${fieldLabels[key] ?? key}: ${value?.message}`);
+
     if (errorFields.length > 0) {
-      setAlertMsg(`Os seguintes campos são obrigatórios ou estão incorretos:\n\n${errorFields.join("\n")}`);
+      setAlertMsg(`Os seguintes campos são obrigatórios ou estão incorretos\n\n${errorFields.join("\n")}`);
       setAlertOpen(true);
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen px-4 bg-gray-50">
-      <AlertComponent
-        title="Erro ao cadastrar"
-        description={alertMsg}
-        cancelButtonText="Fechar"
-        open={alertOpen}
-        openChange={setAlertOpen}
-      />
-      <form
-        onSubmit={handleSubmit(onSubmit, handleInvalidSubmit)}
-        className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-6"
-        autoComplete="off"
+    <div className="bg-gray-50">
+      <Button
+        className="px-6 text-[16px] text-blue-500"
+        variant="ghost"
+        onClick={() => navigate(-1)}
       >
+        <ChevronLeft className="size-5" />
+        Voltar
+      </Button>
+      <div className="flex flex-col items-center justify-center h-screen px-4 bg-gray-50">
+        <AlertComponent
+          title={alertTitle}
+          description={alertMsg}
+          cancelButtonText="Fechar"
+          open={alertOpen}
+          openChange={setAlertOpen}
+        />
+        <form
+          onSubmit={handleSubmit(handleValidSubmit, handleInvalidSubmit)}
+          className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-6"
+          autoComplete="off"
+        >
         <h1 className="text-2xl font-bold text-blue-600 mb-2 text-center">Cadastro de Usuário</h1>
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-sm font-medium text-gray-700">Nome</label>
@@ -99,7 +140,8 @@ export function RegisterFormPage() {
         >
           Realizar cadastro
         </Button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

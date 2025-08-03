@@ -12,7 +12,7 @@ export interface RegisterFormValues {
 }
 
 export const registerSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  name: z.string().min(2, "deve ter pelo menos 2 caracteres"),
   email: z.string().email("E-mail inválido"),
   documentNumber: z.string().refine(
     value => {
@@ -23,7 +23,7 @@ export const registerSchema = z.object({
       message: "Documento deve conter entre 11 e 14 dígitos",
     }
   ),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  password: z.string().min(6, "deve ter pelo menos 6 caracteres"),
   confirmPassword: z.string().min(6, "Confirme sua senha"),
 }).refine(
   (data) => data.password === data.confirmPassword,
